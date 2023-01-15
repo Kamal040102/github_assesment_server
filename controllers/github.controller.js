@@ -44,18 +44,25 @@ const getUserRepo = expressAsyncHandler(async (req, res) => {
             })
         }
 
+        const repoData = [];
+
         try {
-            let data = await axios.get(`https://api.github.com/users/${user}/repos`)
+            let data = [];
+            do {
+                data = await axios.get(`https://api.github.com/users/${user}/repos?per_page=100`)
+
+                repoData.push(...data.data)
+            } while (data.data.length === 100)
 
             res.json({
                 status: true,
-                data: data.data
+                data: repoData
             })
         }
         catch (err) {
             res.status(404).json({
                 status: false,
-                message: "User not found"
+                message: err.message || "User not found"
             })
         }
 
