@@ -48,9 +48,10 @@ const getUserRepo = expressAsyncHandler(async (req, res) => {
 
         try {
             let data = [];
+            let page = 1;
             do {
-                data = await axios.get(`https://api.github.com/users/${user}/repos?per_page=100`)
-
+                data = await axios.get(`https://api.github.com/users/${user}/repos?per_page=100&page=${page}`)
+                page++;
                 repoData.push(...data.data)
             } while (data.data.length === 100)
 
